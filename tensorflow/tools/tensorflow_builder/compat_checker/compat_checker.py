@@ -420,7 +420,7 @@ class ConfigCompatChecker(object):
           elif "[" in spec_split[0]:
             spec_split[0] = spec_split[0].replace("[", "")
           else:
-            warn_msg = "[Warning] Config file format error: Missing `[`."
+            warn_msg = "[Warning] CONFIG file format error: Missing `[`."
             warn_msg += "(section = %s, " % str(section)
             warn_msg += "config = %s)" % str(config)
             logging.warning(warn_msg)
@@ -434,7 +434,7 @@ class ConfigCompatChecker(object):
           elif "]" in spec_split[-1]:
             spec_split[-1] = spec_split[-1].replace("]", "")
           else:
-            warn_msg = "[Warning] Config file format error: Missing `]`."
+            warn_msg = "[Warning] CONFIG file format error: Missing `]`."
             warn_msg += "(section = %s, " % str(section)
             warn_msg += "config = %s)" % str(config)
             logging.warning(warn_msg)

@@ -32,9 +32,9 @@ from tensorflow.python.framework import combinations
 from tensorflow.python.platform import test
 from tensorflow.python.util import compat
 
-
 try:
   import psutil  # pylint: disable=g-import-not-at-top
+
   psutil_import_succeeded = True
 except ImportError:
   psutil_import_succeeded = False
@@ -83,16 +83,16 @@ class TextLineDatasetTestBase(test_base.DatasetTestBase):
 class TextLineDatasetTest(TextLineDatasetTestBase, parameterized.TestCase):
 
   @combinations.generate(
-      combinations.times(
-          test_base.default_test_combinations(),
-          combinations.combine(compression_type=[None, "GZIP", "ZLIB"])))
+    combinations.times(
+      test_base.default_test_combinations(),
+      combinations.combine(compression_type=[None, "GZIP", "ZLIB"])))
   def testTextLineDataset(self, compression_type):
     test_filenames = self._createFiles(
-        2, 5, crlf=True, compression_type=compression_type)
+      2, 5, crlf=True, compression_type=compression_type)
 
     def dataset_fn(filenames, num_epochs, batch_size=None):
       repeat_dataset = readers.TextLineDataset(
-          filenames, compression_type=compression_type).repeat(num_epochs)
+        filenames, compression_type=compression_type).repeat(num_epochs)
       if batch_size:
         return repeat_dataset.batch(batch_size)
       return repeat_dataset
@@ -100,30 +100,30 @@ class TextLineDatasetTest(TextLineDatasetTestBase, parameterized.TestCase):
     # Basic test: read from file 0.
     expected_output = [self._lineText(0, i) for i in range(5)]
     self.assertDatasetProduces(
-        dataset_fn([test_filenames[0]], 1), expected_output=expected_output)
+      dataset_fn([test_filenames[0]], 1), expected_output=expected_output)
 
     # Basic test: read from file 1.
     self.assertDatasetProduces(
-        dataset_fn([test_filenames[1]], 1),
-        expected_output=[self._lineText(1, i) for i in range(5)])
+      dataset_fn([test_filenames[1]], 1),
+      expected_output=[self._lineText(1, i) for i in range(5)])
 
     # Basic test: read from both files.
     expected_output = [self._lineText(0, i) for i in range(5)]
     expected_output.extend(self._lineText(1, i) for i in range(5))
     self.assertDatasetProduces(
-        dataset_fn(test_filenames, 1), expected_output=expected_output)
+      dataset_fn(test_filenames, 1), expected_output=expected_output)
 
     # Test repeated iteration through both files.
     expected_output = [self._lineText(0, i) for i in range(5)]
     expected_output.extend(self._lineText(1, i) for i in range(5))
     self.assertDatasetProduces(
-        dataset_fn(test_filenames, 10), expected_output=expected_output * 10)
+      dataset_fn(test_filenames, 10), expected_output=expected_output * 10)
 
     # Test batched and repeated iteration through both files.
     self.assertDatasetProduces(
-        dataset_fn(test_filenames, 10, 5),
-        expected_output=[[self._lineText(0, i) for i in range(5)],
-                         [self._lineText(1, i) for i in range(5)]] * 10)
+      dataset_fn(test_filenames, 10, 5),
+      expected_output=[[self._lineText(0, i) for i in range(5)],
+                       [self._lineText(1, i) for i in range(5)]] * 10)
 
   @combinations.generate(test_base.default_test_combinations())
   def testTextLineDatasetParallelRead(self):
@@ -134,7 +134,7 @@ class TextLineDatasetTest(TextLineDatasetTestBase, parameterized.TestCase):
       expected_output.extend(self._lineText(j, i) for i in range(10))
     dataset = readers.TextLineDataset(files, num_parallel_reads=4)
     self.assertDatasetProduces(
-        dataset, expected_output=expected_output * 10, assert_items_equal=True)
+      dataset, expected_output=expected_output * 10, assert_items_equal=True)
 
   @combinations.generate(test_base.default_test_combinations())
   def testTextLineDatasetBuffering(self):
@@ -160,7 +160,7 @@ class TextLineDatasetTest(TextLineDatasetTestBase, parameterized.TestCase):
     # Dataset's output shape. Create a different kernel to test that they
     # don't create resources with the same names.
     different_kernel_iterator = iter(
-        readers.TextLineDataset(filename).repeat().batch(16))
+      readers.TextLineDataset(filename).repeat().batch(16))
     self.assertEqual([16], next(different_kernel_iterator).shape)
     # Remove our references to the Python Iterator objects, which (assuming no
     # reference cycles) is enough to trigger DestroyResourceOp and close the
@@ -170,9 +170,9 @@ class TextLineDatasetTest(TextLineDatasetTestBase, parameterized.TestCase):
     del different_kernel_iterator
     if not psutil_import_succeeded:
       self.skipTest(
-          "psutil is required to check that we've closed our files.")
+        "psutil is required to check that we've closed our files.")
     open_files = psutil.Process().open_files()
-    self.assertNotIn(filename, [open_file.path for open_file in open_files])
+    self.assertNotIn(filename, [open_file.input_path for open_file in open_files])
 
   @combinations.generate(test_base.default_test_combinations())
   def testTextLineDatasetPathlib(self):
@@ -182,7 +182,7 @@ class TextLineDatasetTest(TextLineDatasetTestBase, parameterized.TestCase):
     expected_output = [self._lineText(0, i) for i in range(5)]
     ds = readers.TextLineDataset(files)
     self.assertDatasetProduces(
-        ds, expected_output=expected_output, assert_items_equal=True)
+      ds, expected_output=expected_output, assert_items_equal=True)
 
 
 class TextLineDatasetCheckpointTest(TextLineDatasetTestBase,
@@ -191,7 +191,7 @@ class TextLineDatasetCheckpointTest(TextLineDatasetTestBase,
 
   def _build_iterator_graph(self, test_filenames, compression_type=None):
     return readers.TextLineDataset(
-        test_filenames, compression_type=compression_type, buffer_size=10)
+      test_filenames, compression_type=compression_type, buffer_size=10)
 
   @combinations.generate(test_base.default_test_combinations())
   def testTextLineCore(self):
@@ -201,14 +201,14 @@ class TextLineDatasetCheckpointTest(TextLineDatasetTestBase,
     num_outputs = num_files * lines_per_file
     for compression_type in compression_types:
       test_filenames = self._createFiles(
-          num_files,
-          lines_per_file,
-          crlf=True,
-          compression_type=compression_type)
+        num_files,
+        lines_per_file,
+        crlf=True,
+        compression_type=compression_type)
       # pylint: disable=cell-var-from-loop
       self.run_core_tests(
-          lambda: self._build_iterator_graph(test_filenames, compression_type),
-          num_outputs)
+        lambda: self._build_iterator_graph(test_filenames, compression_type),
+        num_outputs)
       # pylint: enable=cell-var-from-loop
 
 

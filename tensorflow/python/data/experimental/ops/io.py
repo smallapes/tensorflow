@@ -34,8 +34,8 @@ COMPRESSION_SNAPPY = "NONE"
 DATASET_SPEC_FILENAME = "dataset_spec.pb"
 # TODO(b/176933539): Use the regular import.
 nested_structure_coder = lazy_loader.LazyLoader(
-    "nested_structure_coder", globals(),
-    "tensorflow.python.saved_model.nested_structure_coder")
+  "nested_structure_coder", globals(),
+  "tensorflow.python.saved_model.nested_structure_coder")
 
 
 @tf_export("data.experimental.save", v1=[])
@@ -45,7 +45,7 @@ def save(dataset, path, compression=None, shard_func=None):
   Example usage:
 
   >>> import tempfile
-  >>> path = os.path.join(tempfile.gettempdir(), "saved_data")
+  >>> path = os.input_path.join(tempfile.gettempdir(), "saved_data")
   >>> # Save a dataset
   >>> dataset = tf.data.Dataset.range(2)
   >>> tf.data.experimental.save(dataset, path)
@@ -91,10 +91,10 @@ def save(dataset, path, compression=None, shard_func=None):
     use_shard_func = True
 
   wrapped_func = dataset_ops.StructuredFunctionWrapper(
-      shard_func,
-      "save()",
-      input_structure=dataset.element_spec,
-      add_to_graph=False)
+    shard_func,
+    "save()",
+    input_structure=dataset.element_spec,
+    add_to_graph=False)
 
   coder = nested_structure_coder.StructureCoder()
   encoded = coder.encode_structure(dataset.element_spec)
@@ -109,12 +109,12 @@ def save(dataset, path, compression=None, shard_func=None):
   # pylint: disable=protected-access
   dataset = dataset._apply_debug_options()
   gen_experimental_dataset_ops.save_dataset(
-      dataset._variant_tensor,
-      path=path,
-      shard_func_other_args=shard_func.captured_inputs,
-      compression=compression,
-      shard_func=shard_func,
-      use_shard_func=use_shard_func)
+    dataset._variant_tensor,
+    path=path,
+    shard_func_other_args=shard_func.captured_inputs,
+    compression=compression,
+    shard_func=shard_func,
+    use_shard_func=use_shard_func)
 
 
 class _LoadDataset(dataset_ops.DatasetSource):
@@ -125,9 +125,9 @@ class _LoadDataset(dataset_ops.DatasetSource):
 
     if reader_func is None:
       reader_func = lambda datasets: datasets.interleave(  # pylint:disable=g-long-lambda
-          lambda x: x,
-          cycle_length=multiprocessing.cpu_count(),
-          num_parallel_calls=dataset_ops.AUTOTUNE)
+        lambda x: x,
+        cycle_length=multiprocessing.cpu_count(),
+        num_parallel_calls=dataset_ops.AUTOTUNE)
 
     self._path = path
     if element_spec is None:
@@ -142,18 +142,18 @@ class _LoadDataset(dataset_ops.DatasetSource):
       self._element_spec = element_spec
     self._compression = compression
     self._reader_func = dataset_ops.StructuredFunctionWrapper(
-        reader_func,
-        "load()",
-        # Dataset of datasets of input elements
-        input_structure=dataset_ops.DatasetSpec(
-            dataset_ops.DatasetSpec(self._element_spec)))
+      reader_func,
+      "load()",
+      # Dataset of datasets of input elements
+      input_structure=dataset_ops.DatasetSpec(
+        dataset_ops.DatasetSpec(self._element_spec)))
 
     variant_tensor = gen_experimental_dataset_ops.load_dataset(
-        path,
-        reader_func_other_args=self._reader_func.function.captured_inputs,
-        compression=compression,
-        reader_func=self._reader_func.function,
-        **self._flat_structure)
+      path,
+      reader_func_other_args=self._reader_func.function.captured_inputs,
+      compression=compression,
+      reader_func=self._reader_func.function,
+      **self._flat_structure)
     super(_LoadDataset, self).__init__(variant_tensor)
 
   def _functions(self):
@@ -171,7 +171,7 @@ def load(path, element_spec=None, compression=None, reader_func=None):
   Example usage:
 
   >>> import tempfile
-  >>> path = os.path.join(tempfile.gettempdir(), "saved_data")
+  >>> path = os.input_path.join(tempfile.gettempdir(), "saved_data")
   >>> # Save a dataset
   >>> dataset = tf.data.Dataset.range(2)
   >>> tf.data.experimental.save(dataset, path)
@@ -225,7 +225,7 @@ def load(path, element_spec=None, compression=None, reader_func=None):
   """
 
   return _LoadDataset(
-      path=path,
-      element_spec=element_spec,
-      compression=compression,
-      reader_func=reader_func)
+    path=path,
+    element_spec=element_spec,
+    compression=compression,
+    reader_func=reader_func)

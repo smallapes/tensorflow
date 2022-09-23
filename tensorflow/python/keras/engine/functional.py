@@ -1324,7 +1324,7 @@ def get_network_config(network, serialize_layer_fn=None):
     serialize_layer_fn: Function used to serialize layers.
 
   Returns:
-    Config dictionary.
+    CONFIG dictionary.
   """
   serialize_layer_fn = (
       serialize_layer_fn or generic_utils.serialize_keras_object)

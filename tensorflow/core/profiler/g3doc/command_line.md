@@ -3,33 +3,28 @@
 * [Command Line Inputs](#command-line-inputs)
 * [Start `tfprof`](#start-tfprof)
 * [Examples](#examples)
-  * [Profile Python Time](#profile-python-time)
-  * [Profile Graph Time](#profile-graph-time)
-  * [Profile Checkpoint Value](#profile-checkpoint-value)
-  * [Profile Model Parameter](#profile-model-parameter)
-  * [Profile Device Placement](#profile-device-placement)
-  * [Define Customized Operation Type](#define-customized-operation-type)
-  * [Non-interactive Mode](#non-interactive-mode)
-
+    * [Profile Python Time](#profile-python-time)
+    * [Profile Graph Time](#profile-graph-time)
+    * [Profile Checkpoint Value](#profile-checkpoint-value)
+    * [Profile Model Parameter](#profile-model-parameter)
+    * [Profile Device Placement](#profile-device-placement)
+    * [Define Customized Operation Type](#define-customized-operation-type)
+    * [Non-interactive Mode](#non-interactive-mode)
 
 ### Command Line Inputs
 
 tfprof command line tool uses the following input:
 
-<b>--profile_path:</b> A ProfileProto binary proto file.
-See QuickStart on generating the file.
+<b>--profile_path:</b> A ProfileProto binary proto file. See QuickStart on generating the file.
 
 <b>THE OLD WAY BELOW IS DEPRECATED:</b>
 
-<b>--graph_path:</b> GraphDef proto file (optional in eager execution).
-Used to build in-memory
-data structure of the model. For example, graph.pbtxt written by tf.Supervisor
-can be passed to --graph_path. You can also easily get GraphDef using
-tf.get_default_graph().as_graph_def(add_shapes=True) or other API.
+<b>--graph_path:</b> GraphDef proto file (optional in eager execution). Used to build in-memory data structure of the
+model. For example, graph.pbtxt written by tf.Supervisor can be passed to --graph_path. You can also easily get GraphDef
+using tf.get_default_graph().as_graph_def(add_shapes=True) or other API.
 
-<b>--run_meta_path:</b> RunMetadata proto file (optional).
-Used to get the memory consumption and execution time of
-each op of the model.
+<b>--run_meta_path:</b> RunMetadata proto file (optional). Used to get the memory consumption and execution time of each
+op of the model.
 
 The following code snippet writes a RunMetadata file:
 
@@ -37,14 +32,13 @@ The following code snippet writes a RunMetadata file:
 run_options = config_pb2.RunOptions(trace_level=config_pb2.RunOptions.FULL_TRACE)
 run_metadata = config_pb2.RunMetadata()
 _ = self._sess.run(..., options=run_options, run_metadata=run_metadata)
-with tf.gfile.Open(os.path.join(output_dir, "run_meta"), "w") as f:
+with tf.gfile.Open(os.input_path.join(output_dir, "run_meta"), "w") as f:
   f.write(run_metadata.SerializeToString())
 ```
 
 <b>--op_log_path:</b>
-tensorflow.tfprof.OpLogProto (optional). A proto used to provide extra operation
-information. 1) float operations. 2) code traces. 3) define customized operation
-type for `-account_type_regexes` option.
+tensorflow.tfprof.OpLogProto (optional). A proto used to provide extra operation information. 1) float operations. 2)
+code traces. 3) define customized operation type for `-account_type_regexes` option.
 
 The following code snippet writes a OpLogProto file.
 
@@ -52,10 +46,8 @@ The following code snippet writes a OpLogProto file.
 tf.profiler.write_op_log(graph, log_dir, op_log=None)
 ```
 
-<b>--checkpoint_path:</b> TensorFlow checkpoint (optional).
-It defines _checkpoint_variable op type. It also provides checkpointed tensors' values.
-Note: this feature is not well maintained now.
-
+<b>--checkpoint_path:</b> TensorFlow checkpoint (optional). It defines _checkpoint_variable op type. It also provides
+checkpointed tensors' values. Note: this feature is not well maintained now.
 
 ### Start `tfprof`
 
@@ -70,6 +62,7 @@ bazel-bin/tensorflow/core/profiler/profiler help
 ```
 
 #### Start `tfprof` Interactive Mode
+
 ```shell
 # The following commands will start tfprof interactive mode.
 #
@@ -163,6 +156,7 @@ tfprof>
 ### Examples
 
 #### Profile Python Time
+
 ```shell
 # Requires --graph_path --op_log_path
 tfprof> code -max_depth 1000 -show_name_regexes .*model_analyzer.*py.* -select micros -account_type_regexes .* -order_by micros
@@ -205,6 +199,7 @@ _TFProfRoot (0us/3.61sec)
 ```
 
 #### Profile Checkpoint Value
+
 ```shell
 # Requires --graph_path, --checkpoint_path.
 tfprof> scope -show_name_regexes unit_1_0.*gamma -select tensor_value -max_depth 5
@@ -231,14 +226,12 @@ _TFProfRoot (--/464.15k params)
   unit_last/final_bn/gamma (64, 64/64 params)
 ```
 
-Where does `_trainable_variables` come from? It is customized operation type
-defined through the OpLogProto file.
-Users can [Define Customized Operation Type](#define-customized-operation-type)
+Where does `_trainable_variables` come from? It is customized operation type defined through the OpLogProto file. Users
+can [Define Customized Operation Type](#define-customized-operation-type)
 
 <b>Following example shows importance of defining customized operation type.</b>
-In this example, extra `Variables` are created by TensorFlow
-implicitly and “/Momentum” is appended to their names. They shouldn't be
-included in you “model capacity” calculation.
+In this example, extra `Variables` are created by TensorFlow implicitly and “/Momentum” is appended to their names. They
+shouldn't be included in you “model capacity” calculation.
 
 ```shell
 tfprof> scope -account_type_regexes VariableV2 -max_depth 4 -select params
@@ -257,11 +250,9 @@ _TFProfRoot (--/930.58k params)
 
 #### Profile Device Placement
 
-In this tutorial, a model is split
-on several gpus at workers and several parameter servers.
+In this tutorial, a model is split on several gpus at workers and several parameter servers.
 
-In tfprof, 'device' is an op_type. For example, if op1 and op2 are placed on
-gpu:0. They share an operation type.
+In tfprof, 'device' is an op_type. For example, if op1 and op2 are placed on gpu:0. They share an operation type.
 
 ```shell
 bazel-bin/tensorflow/core/profiler/profiler \
@@ -277,8 +268,7 @@ _TFProfRoot (--/58.84m params)
 
 #### Define Customized Operation Type
 
-First, in Python code, create an `OpLogProto` proto and add op type
-information to it:
+First, in Python code, create an `OpLogProto` proto and add op type information to it:
 
 ```python
 op_log = tfprof_log_pb2.OpLogProto()
@@ -311,12 +301,11 @@ _TFProfRoot (--/650 params)
   pool_logit/biases (10, 10/10 params)
 ```
 
-Note that `tf.profiler.write_op_log(...)` automatically
-assigns all `Variables` inside `tf.trainable_variables()` a customized
-operation type: `_trainable_variables`.
-
+Note that `tf.profiler.write_op_log(...)` automatically assigns all `Variables` inside `tf.trainable_variables()` a
+customized operation type: `_trainable_variables`.
 
 #### Non-interactive Mode
+
 12) Run tfprof in one-shot mode and dump result to file.
 
 ```shell

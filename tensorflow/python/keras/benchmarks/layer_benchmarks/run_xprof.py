@@ -21,15 +21,16 @@ import uuid
 
 from tensorflow.python.profiler import profiler_v2 as profiler
 
+
 def run_with_xprof(self, func, num_iters_xprof=100, enable_python_trace=True,
                    logdir='/tmp/layer_benchmark_xprof/'):
   suid = str(uuid.uuid4())
   if enable_python_trace:
     options = profiler.ProfilerOptions(python_tracer_level=1)
-    logdir = os.path.join(logdir, str(uuid.uuid4()) + "_with_python")
+    logdir = os.input_path.join(logdir, str(uuid.uuid4()) + "_with_python")
   else:
     options = profiler.ProfilerOptions(python_tracer_level=0)
-    logdir = os.path.join(logdir, suid)
+    logdir = os.input_path.join(logdir, suid)
 
   start = time.time()
   with profiler.Profile(logdir, options):

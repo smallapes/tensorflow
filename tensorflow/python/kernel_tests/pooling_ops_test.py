@@ -1004,7 +1004,7 @@ class PoolingTest(test.TestCase):
     ]
 
     Config = collections.namedtuple(
-        "Config", ["use_gpu", "include_batch_in_index", "argmax", "Targmax"])
+        "CONFIG", ["use_gpu", "include_batch_in_index", "argmax", "Targmax"])
     configs = [
         Config(False, False, [0, 1, 3, 5, 0, 2, 6, 8], dtypes.int64),
         Config(False, True, [0, 1, 3, 5, 9, 11, 15, 17], dtypes.int64),
@@ -1039,7 +1039,7 @@ class PoolingTest(test.TestCase):
     tensor_input = [11.0, 12.0, 13.0, 14.0, 21.0, 22.0, 23.0, 24.0]
 
     Config = collections.namedtuple(
-        "Config", ["use_gpu", "include_batch_in_index", "argmax"])
+        "CONFIG", ["use_gpu", "include_batch_in_index", "argmax"])
     configs = [
         Config(False, False, [0, 1, 3, 5, 0, 2, 6, 8]),
         Config(False, True, [0, 1, 3, 5, 9, 11, 15, 17]),
@@ -1081,7 +1081,7 @@ class PoolingTest(test.TestCase):
     ]
 
     Config = collections.namedtuple(
-        "Config", ["use_gpu", "include_batch_in_index", "argmax"])
+        "CONFIG", ["use_gpu", "include_batch_in_index", "argmax"])
     configs = [
         Config(True, False, [0, 1, 3, 5, 0, 2, 6, 8]),
         Config(True, True, [0, 1, 3, 5, 9, 11, 15, 17])

@@ -63,7 +63,7 @@ class CustomObjectScope(object):
 
   ```python
   layer = Dense(3, kernel_regularizer=my_regularizer)
-  config = layer.get_config()  # Config contains a reference to `my_regularizer`
+  config = layer.get_config()  # CONFIG contains a reference to `my_regularizer`
   ...
   # Later:
   with custom_object_scope({'my_regularizer': my_regularizer}):

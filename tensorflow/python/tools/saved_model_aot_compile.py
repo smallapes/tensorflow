@@ -436,7 +436,7 @@ def _replace_input_placeholders_with_default_values(graph_def, signature_def):
 
 
 def _signature_to_tf2xla_config(signature_def, variable_nodes_to_feed):
-  """Convert `signature_def` to tf2xla config.  Returns a `tf2xla.Config` proto.
+  """Convert `signature_def` to tf2xla config.  Returns a `tf2xla.CONFIG` proto.
 
   Args:
     signature_def: Instance of `SignatureDef`.
@@ -445,7 +445,7 @@ def _signature_to_tf2xla_config(signature_def, variable_nodes_to_feed):
       whether the variable was modified during execution.
 
   Returns:
-    An instance of `tf2xla.Config` proto.
+    An instance of `tf2xla.CONFIG` proto.
 
   Raises:
     RuntimeError: If TensorFlow was not compiled with XLA.

@@ -106,9 +106,9 @@ def generate_checkpoint_state_proto(save_dir,
       and (len(all_model_checkpoint_timestamps)
            != len(all_model_checkpoint_paths))):
     raise ValueError(
-        ("Checkpoint timestamps, if provided, must match checkpoint paths (got "
-         "paths %s and timestamps %s)")
-        % (all_model_checkpoint_paths, all_model_checkpoint_timestamps))
+      ("Checkpoint timestamps, if provided, must match checkpoint paths (got "
+       "paths %s and timestamps %s)")
+      % (all_model_checkpoint_paths, all_model_checkpoint_timestamps))
 
   # Relative paths need to be rewritten to be relative to the "save_dir"
   # if model_checkpoint_path already contains "save_dir".
@@ -120,18 +120,18 @@ def generate_checkpoint_state_proto(save_dir,
         all_model_checkpoint_paths[i] = os.path.relpath(p, save_dir)
 
   coord_checkpoint_proto = CheckpointState(
-      model_checkpoint_path=model_checkpoint_path,
-      all_model_checkpoint_paths=all_model_checkpoint_paths,
-      all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
-      last_preserved_timestamp=last_preserved_timestamp)
+    model_checkpoint_path=model_checkpoint_path,
+    all_model_checkpoint_paths=all_model_checkpoint_paths,
+    all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
+    last_preserved_timestamp=last_preserved_timestamp)
 
   return coord_checkpoint_proto
 
 
 @deprecation.deprecated(
-    date=None,
-    instructions=("Use `tf.train.CheckpointManager` to manage checkpoints "
-                  "rather than manually editing the Checkpoint proto."))
+  date=None,
+  instructions=("Use `tf.train.CheckpointManager` to manage checkpoints "
+                "rather than manually editing the Checkpoint proto."))
 @tf_export(v1=["train.update_checkpoint_state"])
 def update_checkpoint_state(save_dir,
                             model_checkpoint_path,
@@ -165,13 +165,13 @@ def update_checkpoint_state(save_dir,
       containing CheckpointSate.
   """
   update_checkpoint_state_internal(
-      save_dir=save_dir,
-      model_checkpoint_path=model_checkpoint_path,
-      all_model_checkpoint_paths=all_model_checkpoint_paths,
-      latest_filename=latest_filename,
-      save_relative_paths=False,
-      all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
-      last_preserved_timestamp=last_preserved_timestamp)
+    save_dir=save_dir,
+    model_checkpoint_path=model_checkpoint_path,
+    all_model_checkpoint_paths=all_model_checkpoint_paths,
+    latest_filename=latest_filename,
+    save_relative_paths=False,
+    all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
+    last_preserved_timestamp=last_preserved_timestamp)
 
 
 @tf_export("__internal__.train.update_checkpoint_state", v1=[])
@@ -215,7 +215,7 @@ def update_checkpoint_state_internal(save_dir,
   if save_relative_paths:
     if os.path.isabs(model_checkpoint_path):
       rel_model_checkpoint_path = os.path.relpath(
-          model_checkpoint_path, save_dir)
+        model_checkpoint_path, save_dir)
     else:
       rel_model_checkpoint_path = model_checkpoint_path
     rel_all_model_checkpoint_paths = []
@@ -225,18 +225,18 @@ def update_checkpoint_state_internal(save_dir,
       else:
         rel_all_model_checkpoint_paths.append(p)
     ckpt = generate_checkpoint_state_proto(
-        save_dir,
-        rel_model_checkpoint_path,
-        all_model_checkpoint_paths=rel_all_model_checkpoint_paths,
-        all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
-        last_preserved_timestamp=last_preserved_timestamp)
+      save_dir,
+      rel_model_checkpoint_path,
+      all_model_checkpoint_paths=rel_all_model_checkpoint_paths,
+      all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
+      last_preserved_timestamp=last_preserved_timestamp)
   else:
     ckpt = generate_checkpoint_state_proto(
-        save_dir,
-        model_checkpoint_path,
-        all_model_checkpoint_paths=all_model_checkpoint_paths,
-        all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
-        last_preserved_timestamp=last_preserved_timestamp)
+      save_dir,
+      model_checkpoint_path,
+      all_model_checkpoint_paths=all_model_checkpoint_paths,
+      all_model_checkpoint_timestamps=all_model_checkpoint_timestamps,
+      last_preserved_timestamp=last_preserved_timestamp)
 
   if coord_checkpoint_filename == ckpt.model_checkpoint_path:
     raise RuntimeError("Save path '%s' conflicts with path used for "
@@ -277,7 +277,7 @@ def get_checkpoint_state(checkpoint_dir, latest_filename=None):
     # many lines of errors from colossus in the logs.
     if file_io.file_exists(coord_checkpoint_filename):
       file_content = file_io.read_file_to_string(
-          coord_checkpoint_filename)
+        coord_checkpoint_filename)
       ckpt = CheckpointState()
       text_format.Merge(file_content, ckpt)
       if not ckpt.model_checkpoint_path:
@@ -390,8 +390,8 @@ def checkpoint_exists_internal(checkpoint_prefix):
 
 
 @deprecation.deprecated(
-    date=None,
-    instructions="Use standard file APIs to check for files with this prefix.")
+  date=None,
+  instructions="Use standard file APIs to check for files with this prefix.")
 @tf_export(v1=["train.checkpoint_exists"])
 def checkpoint_exists(checkpoint_prefix):
   """Checks whether a V1 or V2 checkpoint exists with the specified prefix.
@@ -412,8 +412,8 @@ def checkpoint_exists(checkpoint_prefix):
 
 
 @deprecation.deprecated(
-    date=None,
-    instructions="Use standard file utilities to get mtimes.")
+  date=None,
+  instructions="Use standard file utilities to get mtimes.")
 @tf_export(v1=["train.get_checkpoint_mtimes"])
 def get_checkpoint_mtimes(checkpoint_prefixes):
   """Returns the mtimes (modification timestamps) of the checkpoints.
@@ -458,8 +458,8 @@ def get_checkpoint_mtimes(checkpoint_prefixes):
 
 
 @deprecation.deprecated(
-    date=None,
-    instructions="Use standard file APIs to delete files with this prefix.")
+  date=None,
+  instructions="Use standard file APIs to delete files with this prefix.")
 @tf_export(v1=["train.remove_checkpoint"])
 def remove_checkpoint(checkpoint_prefix,
                       checkpoint_format_version=saver_pb2.SaverDef.V2,
@@ -475,7 +475,7 @@ def remove_checkpoint(checkpoint_prefix,
     meta_graph_suffix: Suffix for `MetaGraphDef` file. Defaults to 'meta'.
   """
   _delete_file_if_exists(
-      meta_graph_filename(checkpoint_prefix, meta_graph_suffix))
+    meta_graph_filename(checkpoint_prefix, meta_graph_suffix))
   if checkpoint_format_version == saver_pb2.SaverDef.V2:
     # V2 has a metadata file and some data files.
     _delete_file_if_exists(checkpoint_prefix + ".index")
@@ -492,8 +492,8 @@ def _delete_file_if_exists(filespec):
       file_io.delete_file(pathname)
     except errors.NotFoundError:
       logging.warning(
-          "Hit NotFoundError when deleting '%s', possibly because another "
-          "process/thread is also deleting/moving the same file", pathname)
+        "Hit NotFoundError when deleting '%s', possibly because another "
+        "process/thread is also deleting/moving the same file", pathname)
 
 
 def meta_graph_filename(checkpoint_filename, meta_graph_suffix="meta"):
@@ -573,7 +573,7 @@ class CheckpointManager(object):
 
     >>> tmp_dir = tempfile.mkdtemp()
     >>> checkpoint = tf.train.Checkpoint()
-    >>> init_path = checkpoint.save(os.path.join(tmp_dir, 'init'))
+    >>> init_path = checkpoint.save(os.input_path.join(tmp_dir, 'init'))
 
     >>> def init_fn():
     ...   # Partially restore the checkpoint from `init_path`.
@@ -581,7 +581,7 @@ class CheckpointManager(object):
 
     >>> manager = tf.train.CheckpointManager(
     ...     checkpoint,
-    ...     directory=os.path.join(tmp_dir, 'ckpt'),
+    ...     directory=os.input_path.join(tmp_dir, 'ckpt'),
     ...     max_to_keep=None,
     ...     init_fn=init_fn)
     >>> # `restore_or_initialize` will call `init_fn` if there is no existing
@@ -621,9 +621,9 @@ class CheckpointManager(object):
     self._save_counter_assign = None
     if max_to_keep is not None and max_to_keep <= 0:
       raise ValueError(
-          ("Expected a positive integer or `None` for `max_to_keep`, "
-           "got %d.")
-          % (max_to_keep,))
+        ("Expected a positive integer or `None` for `max_to_keep`, "
+         "got %d.")
+        % (max_to_keep,))
     self._max_to_keep = max_to_keep
     self._keep_checkpoint_every_n_hours = keep_checkpoint_every_n_hours
     self._directory = directory
@@ -654,9 +654,9 @@ class CheckpointManager(object):
         # min() saved checkpoint timestamps with the current time to ensure that
         # old checkpoints don't get deleted accidentally.
         logging.warning(
-            ("time.time() returned a value %f seconds behind the last "
-             "preserved checkpoint timestamp.")
-            % (self._last_preserved_timestamp - current_clock,))
+          ("time.time() returned a value %f seconds behind the last "
+           "preserved checkpoint timestamp.")
+          % (self._last_preserved_timestamp - current_clock,))
         self._last_preserved_timestamp = current_clock
       all_timestamps = recovered_state.all_model_checkpoint_timestamps
       all_paths = recovered_state.all_model_checkpoint_paths
@@ -726,12 +726,12 @@ class CheckpointManager(object):
     """Saves the `CheckpointManager`'s state in `directory`."""
     filenames, timestamps = zip(*self._maybe_delete.items())
     update_checkpoint_state_internal(
-        self._directory,
-        model_checkpoint_path=self.latest_checkpoint,
-        all_model_checkpoint_paths=filenames,
-        all_model_checkpoint_timestamps=timestamps,
-        last_preserved_timestamp=self._last_preserved_timestamp,
-        save_relative_paths=True)
+      self._directory,
+      model_checkpoint_path=self.latest_checkpoint,
+      all_model_checkpoint_paths=filenames,
+      all_model_checkpoint_timestamps=timestamps,
+      last_preserved_timestamp=self._last_preserved_timestamp,
+      save_relative_paths=True)
 
   @property
   def _prefix(self):
@@ -811,7 +811,7 @@ class CheckpointManager(object):
       checkpoint_number = save_counter
     if not isinstance(checkpoint_number, compat.integral_types):
       checkpoint_number = training_util.global_step(
-          sess=session, global_step_tensor=checkpoint_number)
+        sess=session, global_step_tensor=checkpoint_number)
     prefix = "%s-%d" % (self._prefix, checkpoint_number)
     if options is None:
       save_path = self._checkpoint.write(prefix)

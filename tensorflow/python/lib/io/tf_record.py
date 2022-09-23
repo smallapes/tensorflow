@@ -26,7 +26,7 @@ from tensorflow.python.util.tf_export import tf_export
 
 
 @tf_export(
-    v1=["io.TFRecordCompressionType", "python_io.TFRecordCompressionType"])
+  v1=["io.TFRecordCompressionType", "python_io.TFRecordCompressionType"])
 @deprecation.deprecated_endpoints("io.TFRecordCompressionType",
                                   "python_io.TFRecordCompressionType")
 class TFRecordCompressionType(object):
@@ -37,15 +37,15 @@ class TFRecordCompressionType(object):
 
 
 @tf_export(
-    "io.TFRecordOptions",
-    v1=["io.TFRecordOptions", "python_io.TFRecordOptions"])
+  "io.TFRecordOptions",
+  v1=["io.TFRecordOptions", "python_io.TFRecordOptions"])
 @deprecation.deprecated_endpoints("python_io.TFRecordOptions")
 class TFRecordOptions(object):
   """Options used for manipulating TFRecord files."""
   compression_type_map = {
-      TFRecordCompressionType.ZLIB: "ZLIB",
-      TFRecordCompressionType.GZIP: "GZIP",
-      TFRecordCompressionType.NONE: ""
+    TFRecordCompressionType.ZLIB: "ZLIB",
+    TFRecordCompressionType.GZIP: "GZIP",
+    TFRecordCompressionType.NONE: ""
   }
 
   def __init__(self,
@@ -127,8 +127,8 @@ class TFRecordOptions(object):
   def _as_record_writer_options(self):
     """Convert to RecordWriterOptions for use with PyRecordWriter."""
     options = _pywrap_record_io.RecordWriterOptions(
-        compat.as_bytes(
-            self.get_compression_type_string(self.compression_type)))
+      compat.as_bytes(
+        self.get_compression_type_string(self.compression_type)))
 
     if self.flush_mode is not None:
       options.zlib_options.flush_mode = self.flush_mode
@@ -151,9 +151,9 @@ class TFRecordOptions(object):
 
 @tf_export(v1=["io.tf_record_iterator", "python_io.tf_record_iterator"])
 @deprecation.deprecated(
-    date=None,
-    instructions=("Use eager execution and: \n"
-                  "`tf.data.TFRecordDataset(path)`"))
+  date=None,
+  instructions=("Use eager execution and: \n"
+                "`tf.data.TFRecordDataset(path)`"))
 def tf_record_iterator(path, options=None):
   """An iterator that read the records from a TFRecords file.
 
@@ -213,7 +213,7 @@ def tf_record_random_reader(path):
 
 
 @tf_export(
-    "io.TFRecordWriter", v1=["io.TFRecordWriter", "python_io.TFRecordWriter"])
+  "io.TFRecordWriter", v1=["io.TFRecordWriter", "python_io.TFRecordWriter"])
 @deprecation.deprecated_endpoints("python_io.TFRecordWriter")
 class TFRecordWriter(_pywrap_record_io.RecordWriter):
   """A class to write records to a TFRecords file.
@@ -242,7 +242,7 @@ class TFRecordWriter(_pywrap_record_io.RecordWriter):
   A minimal example is given below:
 
   >>> import tempfile
-  >>> example_path = os.path.join(tempfile.gettempdir(), "example.tfrecords")
+  >>> example_path = os.input_path.join(tempfile.gettempdir(), "example.tfrecords")
   >>> np.random.seed(0)
 
   >>> # Write the records to a file.
@@ -296,7 +296,7 @@ class TFRecordWriter(_pywrap_record_io.RecordWriter):
 
     # pylint: disable=protected-access
     super(TFRecordWriter, self).__init__(
-        compat.as_bytes(path), options._as_record_writer_options())
+      compat.as_bytes(path), options._as_record_writer_options())
     # pylint: enable=protected-access
 
   # TODO(slebedev): The following wrapper methods are there to compensate
